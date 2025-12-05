@@ -8,3 +8,4 @@ masks/
 archive.zip
 unet_membraine_a6.hdf5
 unet_membrane_a6.hdf5
+output.csv
