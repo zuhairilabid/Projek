@@ -5,9 +5,12 @@ masked_images/
 masks/
 
 # Ignore archive and large model files
-archive.zip
-unet_membraine_a6.hdf5
-unet_membrane_a6.hdf5
 output.csv
-DenseNet121.h5
-machine learning-kelompok 6.html
+model_comparison.csv
+
+# ignore certain extensions
+*.py
+*.html
+*.h5
+*.hdf5
+*.pkl
