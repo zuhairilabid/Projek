@@ -14,3 +14,4 @@ model_comparison.csv
 *.h5
 *.hdf5
 *.pkl
+*.keras
