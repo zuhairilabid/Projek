@@ -15,3 +15,5 @@ model_comparison.csv
 *.hdf5
 *.pkl
 *.keras
+*.png
+*.jpg
