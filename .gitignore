@@ -9,7 +9,6 @@ output.csv
 model_comparison.csv
 
 # ignore certain extensions
-*.py
 *.html
 *.h5
 *.hdf5
@@ -17,3 +16,4 @@ model_comparison.csv
 *.keras
 *.png
 *.jpg
+*.pdf
