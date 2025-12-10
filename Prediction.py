@@ -342,5 +342,6 @@ class DensenetClassifierApp:
 # --- Main Execution ---
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("640x480")
     app = DensenetClassifierApp(root)
     root.mainloop()
