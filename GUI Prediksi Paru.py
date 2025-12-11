@@ -13,10 +13,11 @@ from tensorflow.keras.models import load_model
 
 # --- 2. Cryptography Library (PyCryptodome) ---
 from Crypto.Protocol.KDF import PBKDF2
-from Crypto.Hash import SHA256
+from Crypto.Hash import SHA256, HMAC
 from Crypto.Cipher import AES
 from Crypto.Util import Counter
 from Crypto import Random
+from Crypto.Signature import pkcs1_15 # Not strictly needed, but imported in the original user code's crypto block. Keeping for context.
 
 # --- 3. Database Library ---
 from pymongo import MongoClient
@@ -68,11 +69,29 @@ def generate_key_from_password(password: str) -> tuple[bytes, bytes]:
     key = PBKDF2(
         password=password_bytes,
         salt=salt,
-        dkLen=32, # 32 bytes for AES-256 key
-        count=480000, 
-        prf=SHA256 # Use SHA256 for the KDF
+        dkLen=32,
+        count=480000,
+        # The prf function used in the original code for key derivation
+        prf=lambda p, s: HMAC.new(p, s, SHA256).digest()
     )
+
     return key, salt
+
+def get_key_from_password_and_salt(password: str, salt: bytes) -> bytes:
+    """
+    Generates the AES key from a password and a *known* salt for decryption.
+    """
+    password_bytes = password.encode()
+    
+    key = PBKDF2(
+        password=password_bytes,
+        salt=salt,
+        dkLen=32,
+        count=480000,
+        # Must use the exact same PRF (Pseudo-Random Function) as encryption
+        prf=lambda p, s: HMAC.new(p, s, SHA256).digest() 
+    )
+    return key
 
 def encrypt_data(data_to_encrypt: bytes, key: bytes, salt: bytes) -> bytes:
     """
@@ -94,6 +113,41 @@ def encrypt_data(data_to_encrypt: bytes, key: bytes, salt: bytes) -> bytes:
     # This structure is necessary for decryption
     encrypted_payload = salt + nonce + ciphertext + tag
     return encrypted_payload
+
+def decrypt_data(encrypted_data: bytes, password: str) -> bytes:
+    """
+    Decrypts the combined encrypted data payload (salt + nonce + ciphertext + tag) 
+    using the provided password and AES-256 GCM.
+    
+    Raises: ValueError on InvalidTag (authentication failure) or incorrect payload size.
+    Returns: decrypted_data (JSON bytes)
+    """
+    SALT_SIZE = 16
+    NONCE_SIZE = 16
+    TAG_SIZE = 16
+    
+    if len(encrypted_data) < SALT_SIZE + NONCE_SIZE + TAG_SIZE:
+        raise ValueError("Encrypted data payload is too short.")
+
+    # 1. Separate components from the payload
+    salt = encrypted_data[:SALT_SIZE]
+    nonce = encrypted_data[SALT_SIZE:SALT_SIZE + NONCE_SIZE]
+    ciphertext = encrypted_data[SALT_SIZE + NONCE_SIZE:-TAG_SIZE]
+    tag = encrypted_data[-TAG_SIZE:]
+    
+    # 2. Re-derive the key using the password and the stored salt
+    key = get_key_from_password_and_salt(password, salt)
+    
+    # 3. Create the AES cipher object
+    cipher = AES.new(key, AES.MODE_GCM, nonce=nonce)
+    
+    # 4. Decrypt and verify the authentication tag
+    try:
+        decrypted_data = cipher.decrypt_and_verify(ciphertext, tag)
+        return decrypted_data
+    except ValueError:
+        raise ValueError("Decryption failed. Authentication tag is invalid. Check your password.")
+
 
 # --- IMAGE PROCESSING FUNCTION (Pillow) ---
 
@@ -165,6 +219,9 @@ class DensenetClassifierApp:
         tk.Button(control_frame, text="2. Classify Image", command=self.classify_image, bg="#4CAF50", fg="white").pack(fill=tk.X, pady=10)
         tk.Button(control_frame, text="3. Encrypt & Save Results", command=self.encrypt_and_save, bg="#2196F3", fg="white").pack(fill=tk.X, pady=10)
         tk.Button(control_frame, text="4. Upload Encrypted to MongoDB", command=self.upload_to_mongodb, bg="#FF9800", fg="black").pack(fill=tk.X, pady=10)
+        
+        # New Decryption Button
+        tk.Button(control_frame, text="5. Decrypt Saved Results", command=self.decrypt_saved_file, bg="#9C27B0", fg="white").pack(fill=tk.X, pady=10)
 
         display_frame = tk.Frame(self.master, padx=10, pady=10)
         display_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
@@ -280,7 +337,7 @@ class DensenetClassifierApp:
             encrypted_data = encrypt_data(json_data, key, salt)
             
             self.last_encrypted_data = encrypted_data
-            self.last_salt = salt
+            self.last_salt = salt # This is the *new* salt generated for this specific encryption
             
             # 6. Prompt to save the encrypted file
             save_path = filedialog.asksaveasfilename(
@@ -294,7 +351,7 @@ class DensenetClassifierApp:
                     f.write(encrypted_data)
                 
                 self._update_results_text(self.results_text.get("1.0", tk.END).strip() + 
-                                        f"\n\n**Data successfully encrypted (using AES-256/SHA256) and saved to:**\n{save_path}")
+                                         f"\n\n**Data successfully encrypted (using AES-256/SHA256) and saved to:**\n{save_path}")
                 messagebox.showinfo("Success", f"Encrypted file saved successfully to:\n{save_path}")
             
         except Exception as e:
@@ -326,10 +383,73 @@ class DensenetClassifierApp:
             client.close()
             
             self._update_results_text(self.results_text.get("1.0", tk.END).strip() + 
-                                      f"\n\n**Successfully uploaded to MongoDB!**\nID: {result.inserted_id}")
+                                     f"\n\n**Successfully uploaded to MongoDB!**\nID: {result.inserted_id}")
             messagebox.showinfo("MongoDB Success", f"Encrypted results uploaded to MongoDB.\nID: {result.inserted_id}")
         except Exception as e:
             messagebox.showerror("Error", f"An unexpected error occurred during MongoDB upload: {e}")
+            
+    # --- Step 5: Decryption of Saved File ---
+    def decrypt_saved_file(self):
+        """Loads an encrypted file, prompts for a password, and decrypts the data."""
+        
+        # 1. Select the encrypted file
+        f_path = filedialog.askopenfilename(
+            title="Select Encrypted Results File (.enc)",
+            filetypes=(("Encrypted File", "*.enc"), ("All files", "*.*"))
+        )
+        if not f_path:
+            return
+
+        # 2. Get User Password
+        password = simpledialog.askstring("Decryption Key", f"Enter the password for '{f_path.split('/')[-1]}':", show='*')
+        if not password:
+            return
+            
+        try:
+            # 3. Read encrypted data from file
+            with open(f_path, 'rb') as f:
+                encrypted_data = f.read()
+
+            # 4. Decrypt the data
+            decrypted_json_bytes = decrypt_data(encrypted_data, password)
+            
+            # 5. Decode and parse the JSON
+            decrypted_json_str = decrypted_json_bytes.decode('utf-8')
+            decrypted_payload = json.loads(decrypted_json_str)
+
+            # 6. Prepare output for display
+            results = decrypted_payload.get('classification_results', {})
+            filename = decrypted_payload.get('filename', 'Unknown File')
+
+            output_text = f"*** Decryption Successful ***\n"
+            output_text += f"Original Filename: {filename}\n\n"
+            output_text += "Decrypted Classification Results:\n"
+            
+            for label, certainty in results.items():
+                output_text += f"**{label}**: {certainty:.2f}%\n"
+
+            self._update_results_text(output_text)
+            messagebox.showinfo("Decryption Success", f"Successfully decrypted results for {filename}.")
+            
+            # Optional: Display the original image (decoded from base64)
+            image_data_b64 = decrypted_payload.get('image_data')
+            if image_data_b64:
+                image_bytes = base64.b64decode(image_data_b64)
+                img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+                
+                # Resize image for display purposes
+                display_img = img.resize((300, 300), Image.LANCZOS)
+                self.current_image_tk = ImageTk.PhotoImage(display_img)
+                self.image_label.config(image=self.current_image_tk)
+                self.image_label.image = self.current_image_tk 
+
+        except ValueError as e:
+            # Specifically catch the InvalidTag error from decryption
+            messagebox.showerror("Decryption Error", f"Decryption failed: {e}")
+            self._update_results_text(f"Decryption ERROR: {e}")
+        except Exception as e:
+            messagebox.showerror("Error", f"An unexpected error occurred during file processing: {e}")
+            self._update_results_text(f"File Processing ERROR: {e}")
 
     # --- Helper Method ---
     def _update_results_text(self, text):

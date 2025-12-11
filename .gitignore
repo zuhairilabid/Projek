@@ -7,6 +7,8 @@ masks/
 # Ignore archive and large model files
 output.csv
 model_comparison.csv
+machine learning-kelompok 6 copy.ipynb
+Prediction2.py
 
 # ignore certain extensions
 *.html
