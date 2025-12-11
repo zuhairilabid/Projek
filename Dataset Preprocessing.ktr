@@ -723,694 +723,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Change Null Values</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>// Define policy: "ones", "zeroes", or "mixed"
-var policy = "mixed";
-var class_ones = ["Atelectasis", "Cardiomegaly"];
-
-// Copy original variables
-var newPath = Path;
-var newAPPA = AP_PA;
-var newNo_Finding = No_Finding;
-var newEnlarged_Cardiomediastinum = Enlarged_Cardiomediastinum;
-var newCardiomegaly = Cardiomegaly;
-var newLung_Opacity = Lung_Opacity;
-var newLung_Lesion = Lung_Lesion;
-var newEdema = Edema;
-var newConsolidation = Consolidation;
-var newPneumonia = Pneumonia;
-var newAtelectasis = Atelectasis;
-var newPneumothorax = Pneumothorax;
-var newPleural_Effusion = Pleural_Effusion;
-var newPleural_Other = Pleural_Other;
-var newFracture = Fracture;
-var newSupport_Devices = Support_Devices;
-
-// Fix path
-newPath = Path.replace("CheXpert-v1.0-small", "D:/Downloads");
-
-// Helper function to handle nulls and policy
-function processValue(val, cls) {
-    var feat_val = 0;
-    if (val !== null &amp;&amp; val !== undefined &amp;&amp; val !== "") {
-        val = parseFloat(val);
-        if (val === 1) {
-            feat_val = 1;
-        } else if (val === -1) {
-            if (policy === "ones") {
-                feat_val = 1;
-            } else if (policy === "zeroes") {
-                feat_val = 0;
-            } else if (policy === "mixed") {
-                feat_val = (class_ones.indexOf(cls) !== -1) ? 1 : 0;
-            } else {
-                feat_val = 0;
-            }
-        } else {
-            feat_val = 0;
-        }
-    } else {
-        feat_val = 0;
-    }
-    return feat_val;
-}
-
-// Apply processing
-newAPPA = (AP_PA === null || AP_PA === undefined) ? "0" : AP_PA;
-newNo_Finding = processValue(No_Finding, "No_Finding");
-newEnlarged_Cardiomediastinum = processValue(Enlarged_Cardiomediastinum, "Enlarged_Cardiomediastinum");
-newCardiomegaly = processValue(Cardiomegaly, "Cardiomegaly");
-newLung_Opacity = processValue(Lung_Opacity, "Lung_Opacity");
-newLung_Lesion = processValue(Lung_Lesion, "Lung_Lesion");
-newEdema = processValue(Edema, "Edema");
-newConsolidation = processValue(Consolidation, "Consolidation");
-newPneumonia = processValue(Pneumonia, "Pneumonia");
-newAtelectasis = processValue(Atelectasis, "Atelectasis");
-newPneumothorax = processValue(Pneumothorax, "Pneumothorax");
-newPleural_Effusion = processValue(Pleural_Effusion, "Pleural_Effusion");
-newPleural_Other = processValue(Pleural_Other, "Pleural_Other");
-newFracture = processValue(Fracture, "Fracture");
-newSupport_Devices = processValue(Support_Devices, "Support_Devices");
-
-// Return all variables in Pentaho JS style
-newPath;
-newAPPA;
-newNo_Finding;
-newEnlarged_Cardiomediastinum;
-newCardiomegaly;
-newLung_Opacity;
-newLung_Lesion;
-newEdema;
-newConsolidation;
-newPneumonia;
-newAtelectasis;
-newPneumothorax;
-newPleural_Effusion;
-newPleural_Other;
-newFracture;
-newSupport_Devices;
-</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>newPath</name>
-        <rename>newPath</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newAPPA</name>
-        <rename>newAPPA</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newNo_Finding</name>
-        <rename>newNo_Finding</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newEnlarged_Cardiomediastinum</name>
-        <rename>newEnlarged_Cardiomediastinum</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newCardiomegaly</name>
-        <rename>newCardiomegaly</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newLung_Opacity</name>
-        <rename>newLung_Opacity</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newLung_Lesion</name>
-        <rename>newLung_Lesion</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newEdema</name>
-        <rename>newEdema</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newConsolidation</name>
-        <rename>newConsolidation</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newPneumonia</name>
-        <rename>newPneumonia</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newAtelectasis</name>
-        <rename>newAtelectasis</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newPneumothorax</name>
-        <rename>newPneumothorax</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newPleural_Effusion</name>
-        <rename>newPleural_Effusion</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newPleural_Other</name>
-        <rename>newPleural_Other</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newFracture</name>
-        <rename>newFracture</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>newSupport_Devices</name>
-        <rename>newSupport_Devices</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>432</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Choose Relevant Column</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>newPath</name>
-        <rename>Path</rename>
-      </field>
-      <field>
-        <name>Sex</name>
-      </field>
-      <field>
-        <name>Age</name>
-      </field>
-      <field>
-        <name>Frontal_Lateral</name>
-      </field>
-      <field>
-        <name>newAPPA</name>
-        <rename>AP_PA</rename>
-      </field>
-      <field>
-        <name>newNo_Finding</name>
-        <rename>No_Finding</rename>
-      </field>
-      <field>
-        <name>newEnlarged_Cardiomediastinum</name>
-        <rename>Enlarged_Cardiomediastinum</rename>
-      </field>
-      <field>
-        <name>newCardiomegaly</name>
-        <rename>Cardiomegaly</rename>
-      </field>
-      <field>
-        <name>newLung_Opacity</name>
-        <rename>Lung_Opacity</rename>
-      </field>
-      <field>
-        <name>newLung_Lesion</name>
-        <rename>Lung_Lesion</rename>
-      </field>
-      <field>
-        <name>newEdema</name>
-        <rename>Edema</rename>
-      </field>
-      <field>
-        <name>newConsolidation</name>
-        <rename>Consolidation</rename>
-      </field>
-      <field>
-        <name>newPneumonia</name>
-        <rename>Pneumonia</rename>
-      </field>
-      <field>
-        <name>newAtelectasis</name>
-        <rename>Atelectasis</rename>
-      </field>
-      <field>
-        <name>newPneumothorax</name>
-        <rename>Pneumothorax</rename>
-      </field>
-      <field>
-        <name>newPleural_Effusion</name>
-        <rename>Pleural_Effusion</rename>
-      </field>
-      <field>
-        <name>newPleural_Other</name>
-        <rename>Pleural_Other</rename>
-      </field>
-      <field>
-        <name>newFracture</name>
-        <rename>Fracture</rename>
-      </field>
-      <field>
-        <name>newSupport_Devices</name>
-        <rename>Support_Devices</rename>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>560</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>MongoDB output</name>
-    <type>MongoDbOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <use_connection_string>Y</use_connection_string>
-    <use_legacy_options>N</use_legacy_options>
-    <connection_string>Encrypted 6d6f6e676f64623a2f2dd2f7cca906cf9d97bf43fc278ec3f895</connection_string>
-    <mongo_host>localhost</mongo_host>
-    <mongo_port>27017</mongo_port>
-    <use_all_replica_members>N</use_all_replica_members>
-    <auth_mech/>
-    <auth_kerberos>N</auth_kerberos>
-    <mongo_db>CheXpert-DB</mongo_db>
-    <mongo_collection>Metadata-Train</mongo_collection>
-    <batch_insert_size>100</batch_insert_size>
-    <connect_timeout/>
-    <socket_timeout/>
-    <use_ssl_socket_factory>N</use_ssl_socket_factory>
-    <read_preference>primary</read_preference>
-    <write_concern/>
-    <w_timeout/>
-    <journaled_writes>N</journaled_writes>
-    <truncate>Y</truncate>
-    <update>N</update>
-    <upsert>N</upsert>
-    <multi>N</multi>
-    <modifier_update>N</modifier_update>
-    <write_retries>5</write_retries>
-    <write_retry_delay>10</write_retry_delay>
-    <mongo_fields>
-      <mongo_field>
-        <incoming_field_name>Path</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Sex</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Age</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Frontal_Lateral</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>AP_PA</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>No_Finding</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Enlarged_Cardiomediastinum</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Cardiomegaly</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Lung_Opacity</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Lung_Lesion</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Edema</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Consolidation</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Pneumonia</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Atelectasis</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Pneumothorax</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Pleural_Effusion</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Pleural_Other</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Fracture</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-      <mongo_field>
-        <incoming_field_name>Support_Devices</incoming_field_name>
-        <mongo_doc_path/>
-        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
-        <update_match_field>N</update_match_field>
-        <modifier_update_operation>N/A</modifier_update_operation>
-        <modifier_policy>Insert&amp;Update</modifier_policy>
-        <json_field>N</json_field>
-        <allow_null>N</allow_null>
-      </mongo_field>
-    </mongo_fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>704</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Rename Column</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>Path</name>
-      </field>
-      <field>
-        <name>Sex</name>
-      </field>
-      <field>
-        <name>Age</name>
-      </field>
-      <field>
-        <name>Frontal/Lateral</name>
-        <rename>Frontal_Lateral</rename>
-      </field>
-      <field>
-        <name>AP/PA</name>
-        <rename>AP_PA</rename>
-      </field>
-      <field>
-        <name>No Finding</name>
-        <rename>No_Finding</rename>
-      </field>
-      <field>
-        <name>Enlarged Cardiomediastinum</name>
-        <rename>Enlarged_Cardiomediastinum</rename>
-      </field>
-      <field>
-        <name>Cardiomegaly</name>
-      </field>
-      <field>
-        <name>Lung Opacity</name>
-        <rename>Lung_Opacity</rename>
-      </field>
-      <field>
-        <name>Lung Lesion</name>
-        <rename>Lung_Lesion</rename>
-      </field>
-      <field>
-        <name>Edema</name>
-      </field>
-      <field>
-        <name>Consolidation</name>
-      </field>
-      <field>
-        <name>Pneumonia</name>
-      </field>
-      <field>
-        <name>Atelectasis</name>
-      </field>
-      <field>
-        <name>Pneumothorax</name>
-      </field>
-      <field>
-        <name>Pleural Effusion</name>
-        <rename>Pleural_Effusion</rename>
-      </field>
-      <field>
-        <name>Pleural Other</name>
-        <rename>Pleural_Other</rename>
-      </field>
-      <field>
-        <name>Fracture</name>
-      </field>
-      <field>
-        <name>Support Devices</name>
-        <rename>Support_Devices</rename>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>320</xloc>
-      <yloc>224</yloc>
+      <xloc>160</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1659,8 +973,257 @@ newSupport_Devices;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>352</yloc>
+      <xloc>160</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Change Null Values</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>// Define policy: "ones", "zeroes", or "mixed"
+var policy = "mixed";
+var class_ones = ["Atelectasis", "Cardiomegaly"];
+
+// Copy original variables
+var newPath = Path;
+var newAPPA = AP_PA;
+var newNo_Finding = No_Finding;
+var newEnlarged_Cardiomediastinum = Enlarged_Cardiomediastinum;
+var newCardiomegaly = Cardiomegaly;
+var newLung_Opacity = Lung_Opacity;
+var newLung_Lesion = Lung_Lesion;
+var newEdema = Edema;
+var newConsolidation = Consolidation;
+var newPneumonia = Pneumonia;
+var newAtelectasis = Atelectasis;
+var newPneumothorax = Pneumothorax;
+var newPleural_Effusion = Pleural_Effusion;
+var newPleural_Other = Pleural_Other;
+var newFracture = Fracture;
+var newSupport_Devices = Support_Devices;
+
+// Fix path
+newPath = Path.replace("CheXpert-v1.0-small", "D:/Downloads");
+
+// Helper function to handle nulls and policy
+function processValue(val, cls) {
+    var feat_val = 0;
+    if (val !== null &amp;&amp; val !== undefined &amp;&amp; val !== "") {
+        val = parseFloat(val);
+        if (val === 1) {
+            feat_val = 1;
+        } else if (val === -1) {
+            if (policy === "ones") {
+                feat_val = 1;
+            } else if (policy === "zeroes") {
+                feat_val = 0;
+            } else if (policy === "mixed") {
+                feat_val = (class_ones.indexOf(cls) !== -1) ? 1 : 0;
+            } else {
+                feat_val = 0;
+            }
+        } else {
+            feat_val = 0;
+        }
+    } else {
+        feat_val = 0;
+    }
+    return feat_val;
+}
+
+// Apply processing
+newAPPA = (AP_PA === null || AP_PA === undefined) ? "0" : AP_PA;
+newNo_Finding = processValue(No_Finding, "No_Finding");
+newEnlarged_Cardiomediastinum = processValue(Enlarged_Cardiomediastinum, "Enlarged_Cardiomediastinum");
+newCardiomegaly = processValue(Cardiomegaly, "Cardiomegaly");
+newLung_Opacity = processValue(Lung_Opacity, "Lung_Opacity");
+newLung_Lesion = processValue(Lung_Lesion, "Lung_Lesion");
+newEdema = processValue(Edema, "Edema");
+newConsolidation = processValue(Consolidation, "Consolidation");
+newPneumonia = processValue(Pneumonia, "Pneumonia");
+newAtelectasis = processValue(Atelectasis, "Atelectasis");
+newPneumothorax = processValue(Pneumothorax, "Pneumothorax");
+newPleural_Effusion = processValue(Pleural_Effusion, "Pleural_Effusion");
+newPleural_Other = processValue(Pleural_Other, "Pleural_Other");
+newFracture = processValue(Fracture, "Fracture");
+newSupport_Devices = processValue(Support_Devices, "Support_Devices");
+
+// Return all variables in Pentaho JS style
+newPath;
+newAPPA;
+newNo_Finding;
+newEnlarged_Cardiomediastinum;
+newCardiomegaly;
+newLung_Opacity;
+newLung_Lesion;
+newEdema;
+newConsolidation;
+newPneumonia;
+newAtelectasis;
+newPneumothorax;
+newPleural_Effusion;
+newPleural_Other;
+newFracture;
+newSupport_Devices;
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>newPath</name>
+        <rename>newPath</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newAPPA</name>
+        <rename>newAPPA</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newNo_Finding</name>
+        <rename>newNo_Finding</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newEnlarged_Cardiomediastinum</name>
+        <rename>newEnlarged_Cardiomediastinum</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newCardiomegaly</name>
+        <rename>newCardiomegaly</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newLung_Opacity</name>
+        <rename>newLung_Opacity</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newLung_Lesion</name>
+        <rename>newLung_Lesion</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newEdema</name>
+        <rename>newEdema</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newConsolidation</name>
+        <rename>newConsolidation</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newPneumonia</name>
+        <rename>newPneumonia</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newAtelectasis</name>
+        <rename>newAtelectasis</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newPneumothorax</name>
+        <rename>newPneumothorax</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newPleural_Effusion</name>
+        <rename>newPleural_Effusion</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newPleural_Other</name>
+        <rename>newPleural_Other</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newFracture</name>
+        <rename>newFracture</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>newSupport_Devices</name>
+        <rename>newSupport_Devices</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>416</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1908,13 +1471,13 @@ newSupport_Devices;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>352</yloc>
+      <xloc>416</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Choose Relevant Column </name>
+    <name>Choose Relevant Column</name>
     <type>SelectValues</type>
     <description/>
     <distribute>N</distribute>
@@ -1931,15 +1494,12 @@ newSupport_Devices;
       </field>
       <field>
         <name>Sex</name>
-        <rename/>
       </field>
       <field>
         <name>Age</name>
-        <rename/>
       </field>
       <field>
         <name>Frontal_Lateral</name>
-        <rename/>
       </field>
       <field>
         <name>newAPPA</name>
@@ -2012,8 +1572,351 @@ newSupport_Devices;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
-      <yloc>352</yloc>
+      <xloc>544</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Choose Relevant Column </name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>newPath</name>
+        <rename>Path</rename>
+      </field>
+      <field>
+        <name>Sex</name>
+      </field>
+      <field>
+        <name>Age</name>
+      </field>
+      <field>
+        <name>Frontal_Lateral</name>
+      </field>
+      <field>
+        <name>newAPPA</name>
+        <rename>AP_PA</rename>
+      </field>
+      <field>
+        <name>newNo_Finding</name>
+        <rename>No_Finding</rename>
+      </field>
+      <field>
+        <name>newEnlarged_Cardiomediastinum</name>
+        <rename>Enlarged_Cardiomediastinum</rename>
+      </field>
+      <field>
+        <name>newCardiomegaly</name>
+        <rename>Cardiomegaly</rename>
+      </field>
+      <field>
+        <name>newLung_Opacity</name>
+        <rename>Lung_Opacity</rename>
+      </field>
+      <field>
+        <name>newLung_Lesion</name>
+        <rename>Lung_Lesion</rename>
+      </field>
+      <field>
+        <name>newEdema</name>
+        <rename>Edema</rename>
+      </field>
+      <field>
+        <name>newConsolidation</name>
+        <rename>Consolidation</rename>
+      </field>
+      <field>
+        <name>newPneumonia</name>
+        <rename>Pneumonia</rename>
+      </field>
+      <field>
+        <name>newAtelectasis</name>
+        <rename>Atelectasis</rename>
+      </field>
+      <field>
+        <name>newPneumothorax</name>
+        <rename>Pneumothorax</rename>
+      </field>
+      <field>
+        <name>newPleural_Effusion</name>
+        <rename>Pleural_Effusion</rename>
+      </field>
+      <field>
+        <name>newPleural_Other</name>
+        <rename>Pleural_Other</rename>
+      </field>
+      <field>
+        <name>newFracture</name>
+        <rename>Fracture</rename>
+      </field>
+      <field>
+        <name>newSupport_Devices</name>
+        <rename>Support_Devices</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>MongoDB output</name>
+    <type>MongoDbOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <use_connection_string>Y</use_connection_string>
+    <use_legacy_options>N</use_legacy_options>
+    <connection_string>Encrypted 6d6f6e676f64623a2f2dd2f7cca906cf9d97bf43fc278ec3f895</connection_string>
+    <mongo_host>localhost</mongo_host>
+    <mongo_port>27017</mongo_port>
+    <use_all_replica_members>N</use_all_replica_members>
+    <auth_mech/>
+    <auth_kerberos>N</auth_kerberos>
+    <mongo_db>CheXpert-DB</mongo_db>
+    <mongo_collection>Metadata-Train</mongo_collection>
+    <batch_insert_size>100</batch_insert_size>
+    <connect_timeout/>
+    <socket_timeout/>
+    <use_ssl_socket_factory>N</use_ssl_socket_factory>
+    <read_preference>primary</read_preference>
+    <write_concern/>
+    <w_timeout/>
+    <journaled_writes>N</journaled_writes>
+    <truncate>Y</truncate>
+    <update>N</update>
+    <upsert>N</upsert>
+    <multi>N</multi>
+    <modifier_update>N</modifier_update>
+    <write_retries>5</write_retries>
+    <write_retry_delay>10</write_retry_delay>
+    <mongo_fields>
+      <mongo_field>
+        <incoming_field_name>Path</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Sex</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Age</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Frontal_Lateral</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>AP_PA</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>No_Finding</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Enlarged_Cardiomediastinum</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Cardiomegaly</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Lung_Opacity</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Lung_Lesion</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Edema</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Consolidation</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Pneumonia</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Atelectasis</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Pneumothorax</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Pleural_Effusion</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Pleural_Other</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Fracture</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+      <mongo_field>
+        <incoming_field_name>Support_Devices</incoming_field_name>
+        <mongo_doc_path/>
+        <use_incoming_field_name_as_mongo_field_name>Y</use_incoming_field_name_as_mongo_field_name>
+        <update_match_field>N</update_match_field>
+        <modifier_update_operation>N/A</modifier_update_operation>
+        <modifier_policy>Insert&amp;Update</modifier_policy>
+        <json_field>N</json_field>
+        <allow_null>N</allow_null>
+      </mongo_field>
+    </mongo_fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>688</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2254,13 +2157,13 @@ newSupport_Devices;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>704</xloc>
-      <yloc>352</yloc>
+      <xloc>688</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Rename Column </name>
+    <name>Rename Column</name>
     <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
@@ -2273,15 +2176,12 @@ newSupport_Devices;
     <fields>
       <field>
         <name>Path</name>
-        <rename/>
       </field>
       <field>
         <name>Sex</name>
-        <rename/>
       </field>
       <field>
         <name>Age</name>
-        <rename/>
       </field>
       <field>
         <name>Frontal/Lateral</name>
@@ -2301,7 +2201,6 @@ newSupport_Devices;
       </field>
       <field>
         <name>Cardiomegaly</name>
-        <rename/>
       </field>
       <field>
         <name>Lung Opacity</name>
@@ -2313,23 +2212,18 @@ newSupport_Devices;
       </field>
       <field>
         <name>Edema</name>
-        <rename/>
       </field>
       <field>
         <name>Consolidation</name>
-        <rename/>
       </field>
       <field>
         <name>Pneumonia</name>
-        <rename/>
       </field>
       <field>
         <name>Atelectasis</name>
-        <rename/>
       </field>
       <field>
         <name>Pneumothorax</name>
-        <rename/>
       </field>
       <field>
         <name>Pleural Effusion</name>
@@ -2341,7 +2235,6 @@ newSupport_Devices;
       </field>
       <field>
         <name>Fracture</name>
-        <rename/>
       </field>
       <field>
         <name>Support Devices</name>
@@ -2359,7 +2252,101 @@ newSupport_Devices;
     </remotesteps>
     <GUI>
       <xloc>304</xloc>
-      <yloc>352</yloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Rename Column </name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>Path</name>
+      </field>
+      <field>
+        <name>Sex</name>
+      </field>
+      <field>
+        <name>Age</name>
+      </field>
+      <field>
+        <name>Frontal/Lateral</name>
+        <rename>Frontal_Lateral</rename>
+      </field>
+      <field>
+        <name>AP/PA</name>
+        <rename>AP_PA</rename>
+      </field>
+      <field>
+        <name>No Finding</name>
+        <rename>No_Finding</rename>
+      </field>
+      <field>
+        <name>Enlarged Cardiomediastinum</name>
+        <rename>Enlarged_Cardiomediastinum</rename>
+      </field>
+      <field>
+        <name>Cardiomegaly</name>
+      </field>
+      <field>
+        <name>Lung Opacity</name>
+        <rename>Lung_Opacity</rename>
+      </field>
+      <field>
+        <name>Lung Lesion</name>
+        <rename>Lung_Lesion</rename>
+      </field>
+      <field>
+        <name>Edema</name>
+      </field>
+      <field>
+        <name>Consolidation</name>
+      </field>
+      <field>
+        <name>Pneumonia</name>
+      </field>
+      <field>
+        <name>Atelectasis</name>
+      </field>
+      <field>
+        <name>Pneumothorax</name>
+      </field>
+      <field>
+        <name>Pleural Effusion</name>
+        <rename>Pleural_Effusion</rename>
+      </field>
+      <field>
+        <name>Pleural Other</name>
+        <rename>Pleural_Other</rename>
+      </field>
+      <field>
+        <name>Fracture</name>
+      </field>
+      <field>
+        <name>Support Devices</name>
+        <rename>Support_Devices</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>304</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
